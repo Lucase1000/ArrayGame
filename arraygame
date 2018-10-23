@@ -1,0 +1,411 @@
+
+package Edberg_Arraygame_2;
+
+import java.util.ArrayList;
+import java.util.Scanner;
+
+public class Edberg_Arraygame_2{
+
+    
+    public static void main(String[] args) {
+        ArrayList<Enemy> enemies = new ArrayList();
+        for (int i = 0; i < 4; i++) {
+            enemies.add(new Enemy(5 + i, 16 - i));
+        }
+        ArrayList<Treasure> loot = new ArrayList();
+        for (int i = 0; i < 8; i++) {
+            loot.add(new Treasure(1 + i, 12 - i));
+        }
+
+        Wall w = new Wall(0,0);
+        Player p = new Player(0, 0);
+        char twoarray[][] = new char[16][16];
+        Scanner userinput = new Scanner(System.in);
+        Scanner hello = new Scanner(System.in);
+        System.out.println("What is your name?");
+        String Firstname = hello.next();
+        System.out.println("Welcome " + Firstname);
+        System.out.println("Welcome to Target, you were working as a cashier when all of sudden all the cash flew out of the register.");
+        System.out.println("You must try to collect as much money before your manager realizes what happened!");
+        System.out.println("The @ symbol represents your manager and the $ symbol represnts the money all over the floor. You are the ֍ symbol ");
+        
+
+        boolean win = false;
+        while (!win) {
+            System.out.println("Also," + Firstname + "you can use WASD to move");
+            String Userinput = userinput.nextLine();
+            System.out.println("");
+                if (Userinput.contains("a")) {
+                p.moveleft();
+//This moves my player left
+
+            }
+                        if (Userinput.contains("s")) {
+                p.movedown();
+//This moves my player down
+            }
+
+                      if (Userinput.contains("d")) {
+                p.moveright();
+//This moves my player right
+            }
+
+                        if (Userinput.contains("w")) {
+                p.moveup();
+//This moves my player up
+            }
+                        for (int i = 0; i < 16; i++) {
+                for (int j = 0; j < 16; j++) {
+                    twoarray[i][j] = '.';
+                }
+//This where I create my array 
+
+                 if (Userinput.contains("r")) {
+                reset();
+            }
+
+            }
+
+            twoarray[p.getY()][p.getX()] = '֍';
+//This is defining my enemy its symbol
+
+
+            for (Enemy e : enemies) {
+                e.chase(p);
+                twoarray[e.getY()][e.getX()] = '@';
+            }
+// This is where the player values are passed through the enemies chase method 
+           
+
+            for (Treasure t : loot) {
+                t.Collect(p);
+                twoarray[t.getY()][t.getX()] = '$';
+            }
+ // This is where the player values are passed through the treasure
+                       for (Treasure t : loot) {
+                if (p.getX() == t.getX() && p.getY() == t.getY()) {
+                    twoarray[t.getY()][t.getX()] = '$';
+                    p.inventory();
+                    t.Collect();
+ // This is checking for intersections between the player and Treasure
+
+                }
+            }
+            
+            for (Enemy e : enemies) {
+                if (p.getX() == e.getX() && p.getY() == e.getY()) {
+ // This is checking for intersections between the player and enemy
+                    twoarray[e.getY()][e.getX()] = '@';
+                    p.health();
+                    e.getlost();
+                }
+            }
+
+                       for (int k = 0; k < 16; k++) {
+                System.out.println(".");
+
+                for (int l = 0; l < 16; l++) {
+                    System.out.print(twoarray[k][l]);
+                   
+                }
+            }
+            System.out.println("");
+            System.out.println("Your health is " + p.health);
+            System.out.println("You have " + p.inventory + " dollars");
+
+            
+            if (p.health <= 5) {
+                System.out.println("You lose your health was less than 10");
+                     // lose condition is set
+            }
+   
+            if (p.inventory >= 30) {
+                System.out.println("You Win you earned more $30");
+                     //win condition is set
+            }
+        }
+         // while loop ends
+    }
+    //main ends.
+    public static void reset(){
+         ArrayList<Enemy> enemies = new ArrayList();
+        for (int i = 0; i < 7; i++) {
+            enemies.add(new Enemy(5 + i, 12 - i));
+        }
+        ArrayList<Treasure> loot = new ArrayList();
+        for (int i = 0; i < 9; i++) {
+            loot.add(new Treasure(7 + i, 9 - i));
+        }
+
+        Wall w = new Wall(0,0);
+        Player p = new Player(0, 0);
+        char twoarray[][] = new char[16][16];
+        Scanner userinput = new Scanner(System.in);
+        Scanner hello = new Scanner(System.in);
+        System.out.println("What is your name?");
+        String Firstname = hello.next();
+        System.out.println("Welcome " + Firstname);
+        System.out.println("Welcome to the ");
+        System.out.println("The @ symbol represents the pirates and the $ symbol represnts the nice people who will give you money. You are the ֍ symbol ");
+        System.out.println("The point of the game is to try to collect as much money before the pirates eat the soul out of you ");
+   
+        
+    }
+
+}
+//public class ends 
+ 
+class Wall {
+//Treasure class is constructed
+    int x, y;
+
+    Wall(int x, int y) {
+        this.x = x;
+        this.y = y;
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public void setY(int y) {
+        this.y = y;
+    }
+
+}
+
+class Treasure {
+
+    int x, y;
+
+    Treasure(int x, int y) {
+        this.x = x;
+        this.y = y;
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public void setY(int y) {
+        this.y = y;
+    }
+
+    public void finddown() {
+        this.y += 1;
+    }
+
+    public void findright() {
+        this.x += 1;
+    }
+
+    public void findup() {
+        this.y -= 1;
+    }
+
+    public void findleft() {
+        this.x -= 1;
+    }
+
+    public void Collect() {
+        this.x = 0;
+        this.y = 0;
+
+    }
+
+    public void Collect(Player p) {
+        if (p.x > this.x) {
+            this.findright();
+        }
+        if (p.y > this.y) {
+            this.finddown();
+        }
+        if (p.x < this.x) {
+            this.findleft();
+        }
+        if (p.y < this.y) {
+            this.findup();
+        }
+    }
+
+    public void findReset() {
+        this.x = 0;
+        this.y = 0;
+    }
+}
+
+
+class Enemy {
+// This is my Enemy class is constructed 
+    int x, y;
+
+    Enemy(int x, int y) {
+        this.x = x;
+        this.y = y;
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public void setY(int y) {
+        this.y = y;
+    }
+
+    public void followdown() {
+        this.y += 1;
+    }
+
+    public void followright() {
+        this.x += 1;
+    }
+
+    public void followup() {
+        this.y -= 1;
+    }
+
+    public void followleft() {
+        this.x -= 1;
+    }
+
+    public void getlost() {
+        this.x = 0;
+        this.y = 0;
+
+    }
+
+    public void chase(Player p) {
+        if (p.x > this.x) {
+            this.followright();
+        }
+        if (p.y > this.y) {
+            this.followdown();
+        }
+        if (p.x < this.x) {
+            this.followleft();
+        }
+        if (p.y < this.y) {
+            this.followup();
+        }
+    }
+
+    public void followReset() {
+        this.x = 0;
+        this.y = 0;
+    }
+}
+
+class Player {
+// This is my player class is constructed 
+
+    int x, y, health, inventory;
+
+    Player(int x, int y) {
+        this.x = x;
+        this.y = y;
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    public int getHealth() {
+        return health;
+    }
+
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public void setY(int y) {
+        this.y = y;
+    }
+
+    public void setHealth(int health) {
+        this.health = health;
+    }
+
+    public void setInventory(int inventory) {
+        this.inventory = inventory;
+    }
+
+    public int getInventory() {
+        return inventory;
+    }
+ 
+    public void moveleft() {
+        if (this.x >= 1) {
+            this.x -= 1;
+        } else {
+                      this.x = this.x + 1;
+        }
+    }
+
+    public void moveright() {
+        if (this.x < 3) {
+            this.x += 1;
+        } else {
+                     this.x -= 1;
+        }
+    }
+
+    public void moveup() {
+        if (this.y == 0) {
+            this.y += 1;
+        } else {
+                    this.y -= 1;
+        }
+    }
+
+    public void movedown() {
+        if (this.y == 3) {
+            this.y -= 1;
+        } else {
+                      this.y += 1;
+        }
+    }
+
+
+    public void health() {
+        if (this.health == 10) {
+            this.health -= 1;
+        } else {
+            this.health += 1;
+        }
+    }
+
+    public void inventory() {
+               this.inventory += 1;
+    }
+
+ 
+    }
+
